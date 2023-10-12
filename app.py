@@ -3,11 +3,36 @@ from flask import Flask, request
 from lib.database_connection import get_flask_database_connection
 from lib.album_repository import AlbumRepository
 from lib.album import Album
+from lib.artist_repository import ArtistRepository
+from lib.artist import Artist
 
 # Create a new Flask app
 app = Flask(__name__)
 
 # == Routes ==
+@app.route('/artists')
+def get_artists():
+    connection = get_flask_database_connection(app)
+    repository = ArtistRepository(connection)
+    return ', '.join(
+        f"{artist}"
+        for artist in repository.all()
+        )
+
+@app.route('/artists', methods=['POST'])
+def post_artists():
+    if has_invalid_artist_parameters(request.form):
+        return 'You need to submit a name and a genre', 400
+    connection = get_flask_database_connection(app)
+    repository = ArtistRepository(connection)
+    artist = Artist(
+        None,
+        request.form['name'],
+        request.form['genre']
+    )
+    repository.create(artist)
+    return "", 200
+
 @app.route('/albums', methods=['POST'])
 def post_albums():
     if has_invalid_album_parameters(request.form):
@@ -36,6 +61,10 @@ def has_invalid_album_parameters(form):
     return 'title' not in form or \
         'release_year' not in form or \
         'artist_id' not in form
+
+def has_invalid_artist_parameters(form):
+    return 'name' not in form or \
+        'genre' not in form
 
 # These lines start the server if you run this file directly
 # They also start the server configured to use the test database
