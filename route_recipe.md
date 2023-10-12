@@ -114,7 +114,7 @@ You need to submit a name and a genre
 # GET /artists
 # Expected response (200 OK)
 """
-Pixies, ABBA, Taylor Swift, Nina Simone, Wild nothing
+Pixies, ABBA, Taylor Swift, Nina Simone
 """
 
 ```
