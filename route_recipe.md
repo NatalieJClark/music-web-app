@@ -13,7 +13,18 @@ Body Parameters:
 
 GET /albums
 No parameters
-  
+```
+
+```
+GET /artists
+No parameters
+
+POST /artists
+Body Parameters:
+  name: string
+  genre: string
+
+
 ```
 
 ## 2. Create Examples as Tests
@@ -73,6 +84,39 @@ Album(10, 'Here Comes the Sun', 1971, 4),
 Album(11, 'Fodder on My Wings', 1982, 4),
 Album(12, 'Ring Ring', 1973, 2)
 """
+
+# GET /artists
+# Expected response (200 OK)
+"""
+Pixies, ABBA, Taylor Swift, Nina Simone
+"""
+
+# POST /artists
+# With body parameters:
+# name=Wild nothing
+# genre=Indie
+# Expected response (200 OK)
+# (No content)
+# Then subsequent request:
+# GET /artists
+# Expected response (200 OK)
+"""
+Pixies, ABBA, Taylor Swift, Nina Simone, Wild nothing
+"""
+
+# POST /artists
+# With body parameters:
+# Expected response (400)
+"""
+You need to submit a name and a genre
+"""
+# Then subsequent request:
+# GET /artists
+# Expected response (200 OK)
+"""
+Pixies, ABBA, Taylor Swift, Nina Simone, Wild nothing
+"""
+
 ```
 
 ## 3. Test-drive the Route
