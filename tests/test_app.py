@@ -79,3 +79,47 @@ def test_post_albums_wiith_no_data(db_connection, web_client):
         "Album(10, Here Comes the Sun, 1971, 4)\n" \
         "Album(11, Fodder on My Wings, 1982, 4)\n" \
         "Album(12, Ring Ring, 1973, 2)"
+    
+"""
+When I request GET /artists
+I get a list of artists back
+"""
+def test_get_artists(db_connection, web_client):
+    db_connection.seed('seeds/music_library.sql')
+    get_response = web_client.get('/artists')
+    assert get_response.status_code == 200
+    assert get_response.data.decode('utf-8') == "Pixies, ABBA, Taylor Swift, Nina Simone"
+
+"""
+When I request POST /artists
+With a name and genre
+That artist is reflected in the list when I call GET /artists
+"""
+def test_post_artists(db_connection, web_client):
+    db_connection.seed('seeds/music_library.sql')
+    post_response = web_client.post('/artists', data={
+        'name': 'Wild nothing',
+        'genre': 'Indie'
+    })
+    assert post_response.status_code == 200
+    assert post_response.data.decode('utf-8') == ''
+
+    get_response = web_client.get('/artists')
+    assert get_response.status_code == 200
+    assert get_response.data.decode('utf-8') == "Pixies, ABBA, Taylor Swift, Nina Simone, Wild nothing"
+
+"""
+When I request POST /artists
+With no data
+I get a 400 status code and 'You need to submit a name and a genre'
+And the GET /artists list is unaffected
+"""
+def test_post_artists_with_no_data(db_connection, web_client):
+    db_connection.seed('seeds/music_library.sql')
+    post_response = web_client.post('/artists')
+    assert post_response.status_code == 400
+    assert post_response.data.decode('utf-8') == 'You need to submit a name and a genre'
+
+    get_response = web_client.get('/artists')
+    assert get_response.status_code == 200
+    assert get_response.data.decode('utf-8') == 'Pixies, ABBA, Taylor Swift, Nina Simone'
