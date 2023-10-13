@@ -1,6 +1,6 @@
 """
-When I request GET /artists
-I get a list of artists back
+When I request GET /albums
+I get a list of albums back
 """
 def test_get_albums(db_connection, web_client):
     db_connection.seed("seeds/music_library.sql")
