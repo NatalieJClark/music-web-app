@@ -9,5 +9,6 @@
 
 I used this project to:
 - [x] Consolidate how to set up a Flask project
+- [x] Consolidate how to design a single table schema from a specification
 - [x] Consolidate how to build routes from a specification
 - [x] Learn how to test-drive routes with a database
